@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OMR</title>
+
+<style>
+
+  #mainDiv{
+    visibility: hidden;
+  }
+
+  #configuration{
+    align-items: center;
+  }
+  #confTable{
+    border: 0;
+    font-size: 20px;
+    width: 100%;
+
+  }
+
+  .button{
+    width: auto;
+    padding: 2px 6px 2px 6px;
+    margin:4px 2px 4px 2px;
+  }
+  .resetBtn{
+    float:right;
+    background-color: rgb(50, 168, 82);
+  }
+  .submitBtn{
+    background-color: rgb(50, 123, 168);
+  }
+  .true{
+    background-color: #99ffbb;
+  }
+
+  .false{
+    background-color: #ff9966;
+  }
+#optionTable tr:nth-child(even){
+  background-color: #e0ebeb;
+ }
+    table{
+      display: block;
+    }
+    #optionTable{
+      float: left;
+    }
+    #stats{
+      float: left;
+    }
+    table, th, td {
+      border: 1px  solid #e6e6ff;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding:2px;
+      text-align: left;
+    }
+    th{
+      text-align: center;
+      color: grey;
+      font-size: 10px;
+      background-color: rgb(245, 236, 66);
+    }
+
+    #confirmation{
+      font-size: 40px;
+    }
+
+
+
+</style>
+</head>
+<body>
+
+
+<div id="configuration">
+  <table id="confTable">
+    <tr>
+      <td>Total no. of questions :</td>
+      <td ><input type="number" id="tQuestions"  name="tQuestions" ></td>
+    </tr>
+    <tr>
+      <td>Marks for correct answer :</td>
+      <td><input type="number" id="cAnswer"  name="cAnswer" ></td>
+    </tr>
+    <tr>
+      <td>Marks for right answer :</td>
+      <td><input type="number" id="wAnswer"  name="wAnswer" ></td>
+    </tr>
+    <tr>
+      <td><input class="button resetBtn" type="button" onclick="reset()" value="RESET"></td>
+      <td><input class="button submitBtn" type="button" onclick="submit()" value="SUBMIT"></td>
+    </tr>
+  </table>
+</div>
+
+<table id="confirmation" >
+    <tr>
+        <th>Total Qns</th>
+        <th id="totalQnsC"></th>
+    </tr>
+    <tr>
+        <th>Marks for correct answer</th>
+        <th id="marksForCorrectC"></th>
+    </tr>
+    <tr>
+        <th>Marks for wrong answer</th>
+        <th id="marksForIncorrectC"></th>
+    </tr>
+
+    <tr id="agreeBtnRow">
+        <td></td>
+        <td>  <input onclick="agreeConfig()" type="button" class="button agreeBtn" id="agreeBtn" value="yes, configuration is ok"></td>
+    </tr>
+
+</table>
+
+</div>
+
+<div id="mainDiv">
+
+<form action="/actionpage.php">
+  <table id="optionTable" >
+
+  </table>
+ <!-- <input type="submit" value="Submit"> -->
+</form>
+
+<table id="stats">
+    <tr>
+        <th>Total Qns</th>
+        <th id="totalQns"></th>
+    </tr>
+    <tr>
+        <th>Marks for correct answer</th>
+        <th id="marksForCorrect"></th>
+    </tr>
+    <tr>
+        <th>Marks for wrong answer</th>
+        <th id="marksForIncorrect"></th>
+    </tr>
+
+    <tr>
+        <td>Attempted</td>
+        <td id="attempted"></td>
+    </tr>
+    <tr>
+        <td>Correct</td>
+        <td id="correct"></td>
+    </tr>
+    <tr>
+        <td>Incorrect</td>
+        <td id="incorrect"></td>
+    </tr>
+    <tr>
+        <td>Score</td>
+        <td id="score"></td>
+    </tr>
+
+</table>
+
+</div>
+
+<script>
+
+  var keyList=[];
+  var cMarks,wMarks,totalQ;
+  var correctCount=0;
+  var inCorrectCount=0;
+  var attemptCount=0;
+
+  function init()
+  {
+    document.getElementById("tQuestions").value=90;
+    document.getElementById("cAnswer").value=4;
+    document.getElementById("wAnswer").value=-1;
+    document.getElementById("confirmation").style.visibility="hidden";
+    document.getElementById("stats").style.visibility="hidden";
+    document.getElementById("optionTable").style.visibility = "hidden";
+
+  }
+
+  init();
+  function generate(totalQ)
+  {
+    var myString= `<tr>
+      <th>Q.No.</th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>T</th>
+      <th>F</th>
+
+
+      <th>Q.No.</th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>T</th>
+      <th>F</th>
+
+      <th>Q.No.</th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>T</th>
+      <th>F</th>
+
+      <th>Q.No.</th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>T</th>
+      <th>F</th>
+    </tr>`;
+
+
+    var marker=Math.floor((totalQ+3)/4);
+    //console.log("marker:"+marker);
+    for(var i=1;i<=marker;i++)
+    {
+
+
+      var optionIdAA=i+"A";
+      var optionIdAB=i+"B";
+      var optionIdAC=i+"C";
+      var optionIdAD=i+"D";
+      var optionIdAT=i+"T";
+      var optionIdAF=i+"F";
+
+      var optionIdBA=(i+marker)+"A";
+      var optionIdBB=(i+marker)+"B";
+      var optionIdBC=(i+marker)+"C";
+      var optionIdBD=(i+marker)+"D";
+      var optionIdBT=(i+marker)+"T";
+      var optionIdBF=(i+marker)+"F";
+
+      var optionIdCA=(i+marker*2)+"A";
+      var optionIdCB=(i+marker*2)+"B";
+      var optionIdCC=(i+marker*2)+"C";
+      var optionIdCD=(i+marker*2)+"D";
+      var optionIdCT=(i+marker*2)+"T";
+      var optionIdCF=(i+marker*2)+"F";
+
+
+      var optionIdDA=(i+marker*3)+"A";
+      var optionIdDB=(i+marker*3)+"B";
+      var optionIdDC=(i+marker*3)+"C";
+      var optionIdDD=(i+marker*3)+"D";
+      var optionIdDT=(i+marker*3)+"T";
+      var optionIdDF=(i+marker*3)+"F";
+
+
+      myString+="<tr>"+"<td class='questionNo'>"+i+"</td>";
+      myString+=`
+      <td class='odd'><input  onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdAA+` name=`+i+` value=`+optionIdAA+`></td>
+      <td class='odd'><input  onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdAB+` name=`+i+` value=`+optionIdAB+`></td>
+      <td class='odd'><input  onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdAC+` name=`+i+` value=`+optionIdAC+`></td>
+      <td class='odd'><input  onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdAD+` name=`+i+` value=`+optionIdAD+`></td>
+      <td class='true'><input onchange="onCorrect(this.id,this.name)" type="radio" id=`+optionIdAT+` name=`+i+"A"+` value=`+optionIdAT+` disabled></td>
+      <td class='false'><input onchange="onInCorrect(this.id,this.name)" type="radio" id=`+optionIdAF+` name=`+i+"A"+` value=`+optionIdAF+` disabled></td>
+
+      `;
+
+      myString+="<td class='questionNo'>"+(i+marker)+"</td>";
+      myString+=`
+      <td><input onclick="onAttempt(this.id,this.name)"  type="radio" id=`+optionIdBA+` name=`+(i+marker)+` value=`+optionIdBA+` ></td>
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdBB+` name=`+(i+marker)+` value=`+optionIdBB+`></td>
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdBC+` name=`+(i+marker)+` value=`+optionIdBC+`></td>
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdBD+` name=`+(i+marker)+` value=`+optionIdBD+`></td>
+      <td class='true'><input onchange="onCorrect(this.id,this.name)" type="radio" id=`+optionIdBT+` name=`+(i+marker)+"A"+` value=`+optionIdBT+` disabled></td>
+      <td class='false'><input onchange="onInCorrect(this.id,this.name)" type="radio" id=`+optionIdBF+` name=`+(i+marker)+"A"+` value=`+optionIdBF+` disabled></td>
+
+
+      `;
+
+      myString+="<td class='questionNo'>"+(i+marker*2)+"</td>";
+      myString+=`
+      <td class='odd'><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdCA+` name=`+(i+marker*2)+` value=`+optionIdCA+`></td>
+      <td class='odd'><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdCB+` name=`+(i+marker*2)+` value=`+optionIdCB+`></td>
+      <td class='odd'><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdCC+` name=`+(i+marker*2)+` value=`+optionIdCC+`></td>
+      <td class='odd'><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdCD+` name=`+(i+marker*2)+` value=`+optionIdCD+`></td>
+      <td class='true'><input onchange="onCorrect(this.id,this.name)" type="radio" id=`+optionIdCT+` name=`+(i+marker*2)+"A"+` value=`+optionIdCT+` disabled></td>
+      <td class='false'><input onchange="onInCorrect(this.id,this.name)" type="radio" id=`+optionIdCF+` name=`+(i+marker*2)+"A"+` value=`+optionIdCF+` disabled></td>
+
+      `;
+
+      if((i+marker*3)>totalQ){
+        myString+="</tr>";
+        continue;
+      }
+      myString+="<td class='questionNo'>"+(i+marker*3)+"</td>";
+      myString+=`
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdDA+` name=`+(i+marker*3)+` value=`+optionIdDA+`></td>
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdDB+` name=`+(i+marker*3)+` value=`+optionIdDB+`></td>
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdDC+` name=`+(i+marker*3)+` value=`+optionIdDC+`></td>
+      <td><input onclick="onAttempt(this.id,this.name)" type="radio" id=`+optionIdDD+` name=`+(i+marker*3)+` value=`+optionIdDD+`></td>
+      <td class='true'><input onchange="onCorrect(this.id,this.name)" type="radio" id=`+optionIdDT+` name=`+(i+marker*3)+"A"+` value=`+optionIdDT+` disabled></td>
+      <td class='false'><input onchange="onInCorrect(this.id,this.name)" type="radio" id=`+optionIdDF+` name=`+(i+marker*3)+"A"+` value=`+optionIdDF+` disabled></td>
+
+      </tr>`;
+    }
+
+    document.getElementById("optionTable").innerHTML=myString;
+    document.getElementById("configuration").remove();
+
+
+
+  }
+
+  function agreeConfig()
+  {
+    document.getElementById("optionTable").style.visibility = "visible";
+    document.getElementById("confirmation").remove();
+    document.getElementById("stats").style.visibility="visible";
+
+
+  }
+  function reset()
+  {
+    //console.log("reset is invoked",document.getElementById("tQuestions").value);
+    document.getElementById("tQuestions").value="";
+    document.getElementById("cAnswer").value="";
+    document.getElementById("wAnswer").value="";
+
+  }
+
+  function submit()
+  {
+    totalQ=parseInt(document.getElementById("tQuestions").value);
+    cMarks=parseFloat(document.getElementById("cAnswer").value);
+    wMarks=parseFloat(document.getElementById("wAnswer").value);
+
+    console.log("tqset set:"+totalQ);
+    generate(totalQ);
+
+    document.getElementById("totalQnsC").innerHTML=totalQ;
+    document.getElementById("marksForCorrectC").innerHTML=cMarks;
+    document.getElementById("marksForIncorrectC").innerHTML=wMarks;
+
+    document.getElementById("totalQns").innerHTML=totalQ;
+    document.getElementById("attempted").innerHTML=0;
+    document.getElementById("correct").innerHTML=0;
+    document.getElementById("incorrect").innerHTML=0;
+    document.getElementById("score").innerHTML=0;
+    document.getElementById("marksForCorrect").innerHTML=cMarks;
+    document.getElementById("marksForIncorrect").innerHTML=wMarks;
+    document.getElementById("confirmation").style.visibility = "visible";
+  }
+
+  function calculateScore()
+  {
+    var scored=correctCount*(cMarks)+inCorrectCount*(wMarks);
+    document.getElementById("score").innerHTML=scored.toFixed(2);
+  }
+
+  function ifFound(name)
+  {
+    for(var i=0;i<keyList.length;i++)
+    {
+      if(keyList[i]==name)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function onAttempt(id,name)
+  {
+    if(ifFound(name))return ;
+    keyList.push(name);
+    attemptCount+=1;
+    document.getElementById("attempted").innerHTML=attemptCount;
+    var evalId=name.toString()+"T";
+    document.getElementById(evalId).disabled=false;
+
+    evalId=name.toString()+"F";
+    document.getElementById(evalId).disabled=false;
+
+  }
+
+  function onCorrect(id,name)
+  {
+      if(ifFound(name)){
+        inCorrectCount-=1;
+        document.getElementById("incorrect").innerHTML=inCorrectCount;
+        correctCount+=1;
+        document.getElementById("correct").innerHTML=correctCount;
+        calculateScore();
+        return ;
+
+      }
+      keyList.push(name);
+      correctCount+=1;
+      document.getElementById("correct").innerHTML=correctCount;
+      calculateScore();
+
+  }
+
+  function onInCorrect(id,name)
+  {
+      if(ifFound(name)){
+        correctCount-=1;
+        document.getElementById("correct").innerHTML=correctCount;
+        inCorrectCount+=1;
+        document.getElementById("incorrect").innerHTML=inCorrectCount;
+        calculateScore();
+        return ;
+      }
+      keyList.push(name);
+      inCorrectCount+=1;
+      document.getElementById("incorrect").innerHTML=inCorrectCount;
+      calculateScore();
+
+  }
+
+</script>
+</body>
+</html>
