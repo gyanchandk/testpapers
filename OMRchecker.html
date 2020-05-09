@@ -148,6 +148,10 @@
         <td id="attempted"></td>
     </tr>
     <tr>
+        <td>Evaluated</td>
+        <td id="evaluated"></td>
+    </tr>
+    <tr>
         <td>Correct</td>
         <td id="correct"></td>
     </tr>
@@ -347,9 +351,10 @@
 
     document.getElementById("totalQns").innerHTML=totalQ;
     document.getElementById("attempted").innerHTML=0;
+    document.getElementById("evaluated").innerHTML=0;
     document.getElementById("correct").innerHTML=0;
     document.getElementById("incorrect").innerHTML=0;
-    document.getElementById("score").innerHTML=0;
+    document.getElementById("score").innerHTML="Evaluation not complete !";
     document.getElementById("marksForCorrect").innerHTML=cMarks;
     document.getElementById("marksForIncorrect").innerHTML=wMarks;
     document.getElementById("confirmation").style.visibility = "visible";
@@ -358,7 +363,14 @@
   function calculateScore()
   {
     var scored=correctCount*(cMarks)+inCorrectCount*(wMarks);
-    document.getElementById("score").innerHTML=scored.toFixed(2);
+    var evaluatedCount=parseInt(correctCount+inCorrectCount);
+    document.getElementById("evaluated").innerHTML=evaluatedCount;
+    if(attemptCount==evaluatedCount){
+      document.getElementById("score").innerHTML=scored.toFixed(2);
+    }
+    else{
+      document.getElementById("score").innerHTML="Evaluation not complete !";
+    }
   }
 
   function ifFound(name)
@@ -386,6 +398,8 @@
     evalId=name.toString()+"F";
     document.getElementById(evalId).disabled=false;
 
+    calculateScore();
+
   }
 
   function onCorrect(id,name)
@@ -402,6 +416,7 @@
       keyList.push(name);
       correctCount+=1;
       document.getElementById("correct").innerHTML=correctCount;
+
       calculateScore();
 
   }
