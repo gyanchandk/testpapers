@@ -117,15 +117,15 @@
       var vacantIndexY;
       var vacantNumber;
       var moveCount=0;
+      var rCount=0;
 
       function valid(x,y)
       {
         return (x>=0 && y>=0 && x<orderOfSquare && y<orderOfSquare);
       }
-      function randomize()
+      function randomMove()
       {
-        for(var i=1;i<=100;)
-        {
+
           var move=Math.floor(Math.random()*100)%4;
           console.log("random move:",move);
 
@@ -134,37 +134,163 @@
               //left
               if(valid(vacantIndexX,vacantIndexY-1)){
                 makeMove(gameBoard[vacantIndexX][vacantIndexY-1]);
-                i++;
+                rCount++;
               }
               break;
             case 1:
               //right
               if(valid(vacantIndexX,vacantIndexY+1)){
                 makeMove(gameBoard[vacantIndexX][vacantIndexY+1]);
-                i++;
+                rCount++;
               }
               break;
             case 2:
               //top
               if(valid(vacantIndexX-1,vacantIndexY)){
                 makeMove(gameBoard[vacantIndexX-1][vacantIndexY]);
-                i++;
+                rCount++;
               }
               break;
             case 3:
               //down
               if(valid(vacantIndexX+1,vacantIndexY)){
                 makeMove(gameBoard[vacantIndexX+1][vacantIndexY]);
-                i++;
+                rCount++;
               }
               break;
             default:
 
-          }
 
         }
+
+        moveCount=0;
+        updateMoveCount();
       }
 
+     function wait(ms)
+     {
+       var d=new Date();
+       var d2=null;
+       do{
+         d2=new Date();
+       }while(d2-d<ms)
+     }
+
+     function testFn()
+     {
+       var  tString="";
+       for(var i=1;i<100;i++)
+       {
+         tString+="setTimeout(function(){ randomMove();},"+i*50+");"+"\n";
+       }
+       console.log(tString);
+     }
+     function randomize()
+     {
+
+         //testFn();
+
+        setTimeout(function(){ randomMove();},50);
+        setTimeout(function(){ randomMove();},100);
+        setTimeout(function(){ randomMove();},150);
+        setTimeout(function(){ randomMove();},200);
+        setTimeout(function(){ randomMove();},250);
+        setTimeout(function(){ randomMove();},300);
+        setTimeout(function(){ randomMove();},350);
+        setTimeout(function(){ randomMove();},400);
+        setTimeout(function(){ randomMove();},450);
+        setTimeout(function(){ randomMove();},500);
+        setTimeout(function(){ randomMove();},550);
+        setTimeout(function(){ randomMove();},600);
+        setTimeout(function(){ randomMove();},650);
+        setTimeout(function(){ randomMove();},700);
+        setTimeout(function(){ randomMove();},750);
+        setTimeout(function(){ randomMove();},800);
+        setTimeout(function(){ randomMove();},850);
+        setTimeout(function(){ randomMove();},900);
+        setTimeout(function(){ randomMove();},950);
+        setTimeout(function(){ randomMove();},1000);
+        setTimeout(function(){ randomMove();},1050);
+        setTimeout(function(){ randomMove();},1100);
+        setTimeout(function(){ randomMove();},1150);
+        setTimeout(function(){ randomMove();},1200);
+        setTimeout(function(){ randomMove();},1250);
+        setTimeout(function(){ randomMove();},1300);
+        setTimeout(function(){ randomMove();},1350);
+        setTimeout(function(){ randomMove();},1400);
+        setTimeout(function(){ randomMove();},1450);
+        setTimeout(function(){ randomMove();},1500);
+        setTimeout(function(){ randomMove();},1550);
+        setTimeout(function(){ randomMove();},1600);
+        setTimeout(function(){ randomMove();},1650);
+        setTimeout(function(){ randomMove();},1700);
+        setTimeout(function(){ randomMove();},1750);
+        setTimeout(function(){ randomMove();},1800);
+        setTimeout(function(){ randomMove();},1850);
+        setTimeout(function(){ randomMove();},1900);
+        setTimeout(function(){ randomMove();},1950);
+        setTimeout(function(){ randomMove();},2000);
+        setTimeout(function(){ randomMove();},2050);
+        setTimeout(function(){ randomMove();},2100);
+        setTimeout(function(){ randomMove();},2150);
+        setTimeout(function(){ randomMove();},2200);
+        setTimeout(function(){ randomMove();},2250);
+        setTimeout(function(){ randomMove();},2300);
+        setTimeout(function(){ randomMove();},2350);
+        setTimeout(function(){ randomMove();},2400);
+        setTimeout(function(){ randomMove();},2450);
+        setTimeout(function(){ randomMove();},2500);
+        setTimeout(function(){ randomMove();},2550);
+        setTimeout(function(){ randomMove();},2600);
+        setTimeout(function(){ randomMove();},2650);
+        setTimeout(function(){ randomMove();},2700);
+        setTimeout(function(){ randomMove();},2750);
+        setTimeout(function(){ randomMove();},2800);
+        setTimeout(function(){ randomMove();},2850);
+        setTimeout(function(){ randomMove();},2900);
+        setTimeout(function(){ randomMove();},2950);
+        setTimeout(function(){ randomMove();},3000);
+        setTimeout(function(){ randomMove();},3050);
+        setTimeout(function(){ randomMove();},3100);
+        setTimeout(function(){ randomMove();},3150);
+        setTimeout(function(){ randomMove();},3200);
+        setTimeout(function(){ randomMove();},3250);
+        setTimeout(function(){ randomMove();},3300);
+        setTimeout(function(){ randomMove();},3350);
+        setTimeout(function(){ randomMove();},3400);
+        setTimeout(function(){ randomMove();},3450);
+        setTimeout(function(){ randomMove();},3500);
+        setTimeout(function(){ randomMove();},3550);
+        setTimeout(function(){ randomMove();},3600);
+        setTimeout(function(){ randomMove();},3650);
+        setTimeout(function(){ randomMove();},3700);
+        setTimeout(function(){ randomMove();},3750);
+        setTimeout(function(){ randomMove();},3800);
+        setTimeout(function(){ randomMove();},3850);
+        setTimeout(function(){ randomMove();},3900);
+        setTimeout(function(){ randomMove();},3950);
+        setTimeout(function(){ randomMove();},4000);
+        setTimeout(function(){ randomMove();},4050);
+        setTimeout(function(){ randomMove();},4100);
+        setTimeout(function(){ randomMove();},4150);
+        setTimeout(function(){ randomMove();},4200);
+        setTimeout(function(){ randomMove();},4250);
+        setTimeout(function(){ randomMove();},4300);
+        setTimeout(function(){ randomMove();},4350);
+        setTimeout(function(){ randomMove();},4400);
+        setTimeout(function(){ randomMove();},4450);
+        setTimeout(function(){ randomMove();},4500);
+        setTimeout(function(){ randomMove();},4550);
+        setTimeout(function(){ randomMove();},4600);
+        setTimeout(function(){ randomMove();},4650);
+        setTimeout(function(){ randomMove();},4700);
+        setTimeout(function(){ randomMove();},4750);
+        setTimeout(function(){ randomMove();},4800);
+        setTimeout(function(){ randomMove();},4850);
+        setTimeout(function(){ randomMove();},4900);
+        setTimeout(function(){ randomMove();},4950);
+
+     }
 
       function generate()
       {
@@ -223,6 +349,7 @@
 
         generate();
 
+        rCount=0;
         randomize();
         moveCount=0;
         updateMoveCount();
