@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SQUARE GAME@GYAN</title>
+  <style>
+
+    body{
+      background-color: rgb(240, 245, 245);
+    }
+    #configOption{
+      display: block;
+      width: 120px;
+      margin-top:20px;
+      background-color: white;
+      border-radius: 10px;
+      margin: 20px;
+      align-items: center;
+      border: 2px solid rgb(255, 194, 153);
+      float: left;
+    }
+
+    .configBox{
+      width: 100px;
+      height:60px;
+      margin-left:10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      background-color: rgb(224, 235, 235);
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+      border-radius: 5px;
+    }
+
+    .order{
+      text-align: center;
+      padding-top: 15px;
+      color: rgb(102, 0, 102);
+      font-size: 30px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-family: "Lucida Console", Courier, monospace;
+      font-weight: bold;
+    }
+
+    #outerFrame{
+      display: block;
+      width: 80%;
+      background-color: white;
+      border-radius: 10px;
+      margin: 20px;
+      align-items: center;
+      border: 2px solid rgb(255, 194, 153);
+      float: left;
+
+    }
+
+    .innerBlock{
+      display: block;
+      width: 90px;
+      height:90px;
+      margin-left:10px;
+      margin-top: 10px;
+      float: left;
+      background-color: rgb(224, 235, 235);
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+      border-radius: 5px;
+    }
+
+    .number{
+      text-align: center;
+      padding-top: 25px;
+      color: rgb(255, 128, 0);
+      font-size: 50px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-family: "Lucida Console", Courier, monospace;
+      font-weight: bold;
+    }
+
+    .moves{
+      text-align: center;
+      font-family: "Lucida Console", Courier, monospace;
+      font-size: 20px;
+      font-weight: bold;
+      margin:5px;
+    }
+    #moveCount{
+      text-align: center;
+      font-family: "Lucida Console", Courier, monospace;
+      font-size: 20px;
+      font-weight: bold;
+      margin:5px;
+    }
+
+
+  </style>
+
+</head>
+<body>
+
+    <div id="configOption">
+      <div class="configBox"><label class="moves">Moves:</label><div class="moveCount" id="moveCount"></div></div>
+      <div onclick="configure(3)" class="configBox"><div class="order">3x3</div></div>
+      <div onclick="configure(4)" class="configBox"><div class="order">4x4</div></div>
+      <div onclick="configure(5)" class="configBox"><div class="order">5x5</div></div>
+      <div onclick="configure(6)" class="configBox"><div class="order">6x6</div></div>
+    </div>
+
+    <div id="outerFrame">
+    </div>
+
+    <script>
+
+
+      var orderOfSquare;
+      var gameBoard;
+      var gameBoardX;
+      var gameBoardY;
+      var vacantIndexX;
+      var vacantIndexY;
+      var vacantNumber;
+      var moveCount=0;
+
+      function valid(x,y)
+      {
+        return (x>=0 && y>=0 && x<orderOfSquare && y<orderOfSquare);
+      }
+      function randomize()
+      {
+        for(var i=1;i<=100;)
+        {
+          var move=Math.floor(Math.random()*100)%4;
+          console.log("random move:",move);
+
+          switch (move) {
+            case 0:
+              //left
+              if(valid(vacantIndexX,vacantIndexY-1)){
+                makeMove(gameBoard[vacantIndexX][vacantIndexY-1]);
+                i++;
+              }
+              break;
+            case 1:
+              //right
+              if(valid(vacantIndexX,vacantIndexY+1)){
+                makeMove(gameBoard[vacantIndexX][vacantIndexY+1]);
+                i++;
+              }
+              break;
+            case 2:
+              //top
+              if(valid(vacantIndexX-1,vacantIndexY)){
+                makeMove(gameBoard[vacantIndexX-1][vacantIndexY]);
+                i++;
+              }
+              break;
+            case 3:
+              //down
+              if(valid(vacantIndexX+1,vacantIndexY)){
+                makeMove(gameBoard[vacantIndexX][vacantIndexY]);
+                i++;
+              }
+              break;
+            default:
+
+          }
+
+        }
+      }
+
+
+      function generate()
+      {
+        for(var i=0;i<orderOfSquare;i++)
+        {
+          gameBoard[i]=new Array(orderOfSquare);
+          gameBoardX[i]=new Array(orderOfSquare);
+          gameBoardY[i]=new Array(orderOfSquare);
+        }
+
+        var numberOnBlock=0;
+        for(var i=0;i<orderOfSquare;i++)
+        {
+          for(var j=0;j<orderOfSquare;j++)
+          {
+            gameBoard[i][j]=++numberOnBlock;
+            gameBoardX[i][j]=0;
+            gameBoardY[i][j]=0;
+
+          }
+        }
+
+        console.log(gameBoard);
+      }
+
+      function configure(x)
+      {
+
+        orderOfSquare=parseInt(x);
+        console.log(orderOfSquare,orderOfSquare);
+
+        vacantIndexX=orderOfSquare-1;
+        vacantIndexY=orderOfSquare-1;
+
+        gameBoard=new Array(orderOfSquare);
+        gameBoardX=new Array(orderOfSquare);
+        gameBoardY=new Array(orderOfSquare);
+
+        vacantNumber=orderOfSquare*orderOfSquare;
+
+
+
+        var width=90*orderOfSquare+10*(orderOfSquare+1);
+        var height=90*orderOfSquare+10*(orderOfSquare+1);
+        document.getElementById("outerFrame").style.width=width+"px";
+        document.getElementById("outerFrame").style.height=width+"px";
+
+
+        var blockString="";
+        for(var i=1;i<vacantNumber;i++)
+        {
+          blockString+=`<div class="innerBlock" id=`+i+` onclick="makeMove(this.id)"><div class="number">`+i+`</div></div>`;
+        }
+        document.getElementById("outerFrame").innerHTML=blockString;
+        document.getElementById("outerFrame").innerHTML=blockString;
+
+        generate();
+
+        randomize();
+        moveCount=0;
+        updateMoveCount();
+
+      }
+
+      function init()
+      {
+        orderOfSquare=3;
+        moveCount=0;
+        updateMoveCount();
+        configure(orderOfSquare);
+      }
+      init();
+
+      function changeCSSOfBlock(blockId,direction)
+      {
+        var xMovement=0,yMovement=0;
+
+        switch (direction) {
+          case "left":
+              xMovement="-100";
+               break;
+          case "right":
+              xMovement="100";
+              break;
+          case "down":
+                yMovement="100";
+                break;
+          case "up":
+                yMovement="-100"
+                break;
+          default:
+              //nothing
+        }
+        console.log("xMovement,yMovement:",xMovement,yMovement);
+        var x=Math.ceil(blockId/orderOfSquare)-1;
+        var y=(blockId-1)%orderOfSquare;
+
+        gameBoardX[x][y]+=parseInt(xMovement);
+        gameBoardY[x][y]+=parseInt(yMovement);
+
+        document.getElementById(blockId).style.transform="translate("+gameBoardX[x][y].toString()+"px,"+gameBoardY[x][y].toString()+"px)";
+        console.log("translate("+gameBoardX[x][y].toString()+","+gameBoardY[x][y].toString()+")");
+
+        moveCount++;
+      }
+      //document.getElementById("8").style.transform=" translate(-100px,0px)";
+
+      function swap(blockId,a,b,p,q)
+      {
+        vacantIndexX=a;
+        vacantIndexY=b;
+
+        gameBoard[p][q]=parseInt(blockId);
+        gameBoard[a][b]=vacantNumber;
+
+      }
+      function moveBlocks(blockId)
+      {
+        var blockX,blockY;
+        for(var i=0;i<orderOfSquare;i++)
+        {
+          for(var j=0;j<orderOfSquare;j++)
+          {
+            if(gameBoard[i][j]==blockId)
+            {
+              blockX=i;blockY=j;
+              console.log("block position:",blockX,blockY);
+              console.log("vacant position:",vacantIndexX,vacantIndexY);
+              break;
+            }
+          }
+        }
+
+        //vertical movement
+        if(blockY==vacantIndexY)
+        {
+          if((blockX+1)==vacantIndexX)
+          {
+            //down
+            changeCSSOfBlock(blockId,"down");
+            swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
+            console.log("move down");
+          }
+          else if((blockX-1)==vacantIndexX)
+          {
+            //move up
+            changeCSSOfBlock(blockId,"up");
+            swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
+            console.log("move up");
+          }
+        }
+
+        //horizontal movement
+        if(blockX==vacantIndexX)
+        {
+          if((blockY+1)==vacantIndexY)
+          {
+            //move right
+            changeCSSOfBlock(blockId,"right");
+            swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
+            console.log("move right");
+          }
+          else if((blockY-1)==vacantIndexY)
+          {
+            //move left
+            changeCSSOfBlock(blockId,"left");
+            swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
+            console.log("move left");
+          }
+        }
+
+      }
+
+      function updateMoveCount()
+      {
+        document.getElementById("moveCount").innerHTML=moveCount;
+      }
+
+      function makeMove(bId)
+      {
+        console.log("makeMove() invoked.");
+        var blockId=parseInt(bId);
+        console.log(blockId);
+        moveBlocks(blockId);
+
+        console.log("new status of vacant:",vacantIndexX,vacantIndexY);
+        console.log(gameBoard);
+
+        updateMoveCount();
+      }
+
+    </script>
+</body>
+</html>
