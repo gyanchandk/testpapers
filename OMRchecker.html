@@ -163,8 +163,14 @@
         <td>Score</td>
         <td id="score"></td>
     </tr>
+    <tr>
+        <td>Want to take print !</td>
+        <td><input onclick="takePrint()" type="button" class="button"  value="PRINT"></td>
+    </tr>
 
 </table>
+
+
 
 </div>
 
@@ -175,6 +181,12 @@
   var correctCount=0;
   var inCorrectCount=0;
   var attemptCount=0;
+
+  function takePrint()
+  {
+    console.log('print command');
+    window.print();
+  }
 
   function init()
   {
@@ -227,7 +239,7 @@
 
 
     var marker=Math.floor((totalQ+3)/4);
-    //console.log("marker:"+marker);
+    console.log("marker:"+marker);
     for(var i=1;i<=marker;i++)
     {
 
@@ -272,6 +284,10 @@
       <td class='false'><input onchange="onInCorrect(this.id,this.name)" type="radio" id=`+optionIdAF+` name=`+i+"A"+` value=`+optionIdAF+` disabled></td>
 
       `;
+      if((i+marker)>totalQ){
+        myString+="</tr>";
+        continue;
+      }
 
       myString+="<td class='questionNo'>"+(i+marker)+"</td>";
       myString+=`
@@ -284,6 +300,10 @@
 
 
       `;
+      if((i+marker*2)>totalQ){
+        myString+="</tr>";
+        continue;
+      }
 
       myString+="<td class='questionNo'>"+(i+marker*2)+"</td>";
       myString+=`
