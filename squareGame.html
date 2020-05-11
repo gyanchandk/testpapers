@@ -47,17 +47,21 @@
       font-weight: bold;
     }
 
+
+
+
     #outerFrame{
       display: block;
-      width: 80%;
+      float:left;
+
+    }
+
+    .board{
       background-color: white;
       border-radius: 10px;
       margin: 20px;
       align-items: center;
       border: 2px solid rgb(255, 194, 153);
-      float: left;
-      pointer-events: none;
-
     }
 
     .innerBlock{
@@ -125,14 +129,48 @@
       color: #e6fff2;
     }
 
+    #congrats{
+      font-size: 50px;
+      text-align: center;
+      margin: 10px;
+    }
+    #gameTime{
+      font-size: 20px;
+      text-align: center;
+      margin: 5px;
+    }
+    #steps{
+      font-size: 20px;
+      text-align: center;
+      margin: 5px;
+    }
+
+    #playAgain{
+      font-size: 40px;
+      text-align: center;
+      margin: 5px;
+
+    }
+    .playBtn{
+      padding: 10px;
+      background-color: #00e600;
+      border-radius: 5px;
+      margin: 10px;
+      font-size: 20px;
+      color: #000000;
+      font-family: "Lucida console", Courier, monospace;
+    }
 
 
   </style>
 
 </head>
 <body>
-     <div id="outerFrame" >
-     </div>
+
+
+
+     <div id="outerFrame" class="board"></div>
+
 
     <div  id="configOption" class="sidePane">
       <div id="gameStart" class="configBox order" onclick="gameStart()" >START</div>
@@ -159,6 +197,11 @@
       var moveCount=0;
       var rCount=0;
       var startTime;
+      var gameBoardWidth,gameBoardHeight;
+      var gameTime="00:00:00";
+      var timerArray=new Array(7200);
+
+      var shuffle=false;
 
       function valid(x,y)
       {
@@ -212,6 +255,7 @@
      {
        document.getElementById("outerFrame").style.opacity=0.5;
        document.getElementById("outerFrame").style.pointerEvents="none";
+       shuffle=true;
      }
      function randomize()
      {
@@ -282,12 +326,29 @@
           var mString=(minutes<10) ? "0"+minutes : minutes;
           var sString=(seconds<10) ? "0"+seconds : seconds;
           var timerString=hString+":"+mString+":"+sString;
-
+          gameTime=timerString;
           document.getElementById("timerBox").innerHTML=timerString;
 
           //console.log("timer:",timerString);
       }
 
+      function playAgain()
+      {
+        init();
+      }
+      function gameEnd()
+      {
+          for(var i=0;i<7200;i++)
+          {
+            clearTimeout(timerArray[i]);
+          }
+          var eString="<div id='congrats'>WON!</div>";
+          eString+="<div id='gameTime'>Time:"+gameTime+"</div>";
+          eString+="<div id='steps'>Steps:"+moveCount+"</div>";
+          eString+="<div id='playAgain'><input class='playBtn' type='button' onclick='playAgain()' value='Play Again'></div>";
+
+          document.getElementById("outerFrame").innerHTML=eString;
+      }
       function gameStart()
       {
         startTime=new Date();
@@ -296,9 +357,11 @@
         document.getElementById("outerFrame").style.opacity=1;
         document.getElementById("outerFrame").style.pointerEvents="initial";
 
+
+
         for(var i=0;i<7200;i++)
         {
-          setTimeout(function(){ updateTimer();},i*500);
+          timerArray[i]=setTimeout(function(){ updateTimer();},i*500);
         }
 
       }
@@ -323,7 +386,9 @@
         var width=90*orderOfSquare+10*(orderOfSquare+1);
         var height=90*orderOfSquare+10*(orderOfSquare+1);
         document.getElementById("outerFrame").style.width=width+"px";
-        document.getElementById("outerFrame").style.height=width+"px";
+        document.getElementById("outerFrame").style.height=height+"px";
+
+        gameBoardWidth=gameBoardHeight=width;
 
 
         var blockString="";
@@ -345,14 +410,21 @@
         moveCount=0;
         updateMoveCount();
 
+
+
       }
 
       function init()
       {
         orderOfSquare=3;
         moveCount=0;
+
+
+        document.getElementById("timerBox").innerHTML="00:00:00";
         updateMoveCount();
+        shuffle=false;
         configure(orderOfSquare);
+
       }
       init();
 
@@ -383,10 +455,13 @@
         gameBoardX[x][y]+=parseInt(xMovement);
         gameBoardY[x][y]+=parseInt(yMovement);
 
+
+
         document.getElementById(blockId).style.transform="translate("+gameBoardX[x][y].toString()+"px,"+gameBoardY[x][y].toString()+"px)";
         //console.log("translate("+gameBoardX[x][y].toString()+","+gameBoardY[x][y].toString()+")");
 
         moveCount++;
+
       }
       //document.getElementById("8").style.transform=" translate(-100px,0px)";
 
@@ -461,6 +536,22 @@
         document.getElementById("moveCount").innerHTML=moveCount;
       }
 
+      function checkForOver()
+      {
+          for(var i=0;i<orderOfSquare;i++)
+          {
+            for(var j=0;j<orderOfSquare;j++)
+            {
+              if(gameBoardX[i][j]!=0 || gameBoardY[i][j]!=0)
+              {
+                return;
+              }
+            }
+          }
+
+          gameEnd();
+      }
+
       function makeMove(bId)
       {
         //console.log("makeMove() invoked.");
@@ -472,6 +563,12 @@
         //console.log(gameBoard);
 
         updateMoveCount();
+        if(shuffle==true )
+        {
+            checkForOver();
+        }
+
+
       }
 
     </script>
