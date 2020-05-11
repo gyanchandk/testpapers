@@ -9,14 +9,17 @@
     }
     #configOption{
       display: block;
+      float: left;
+
+    }
+    .sidePane{
       width: 120px;
       margin-top:20px;
       background-color: white;
       border-radius: 10px;
       margin: 20px;
       align-items: center;
-      border: 2px solid rgb(255, 194, 153);
-      float: left;
+      border: 2px solid rgb(0, 102, 153);
     }
 
     .configBox{
@@ -25,18 +28,20 @@
       margin-left:10px;
       margin-top: 10px;
       margin-bottom: 10px;
-      background-color: rgb(224, 235, 235);
+      background-color: rgb(255, 140, 26);
       box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+      border-right: 2px solid #8c8c8c;
+      border-bottom: 1px solid #8c8c8c;
       border-radius: 5px;
     }
 
     .order{
       text-align: center;
       padding-top: 15px;
-      color: rgb(102, 0, 102);
+      color: rgb(224, 235, 235);
       font-size: 30px;
       font-family: Arial, Helvetica, sans-serif;
-      font-family: "Lucida Console", Courier, monospace;
+      font-family: "Lucida console", Courier, monospace;
       font-weight: bold;
     }
 
@@ -61,6 +66,8 @@
       float: left;
       background-color: rgb(224, 235, 235);
       box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+      /* border-right: 2px solid #8c8c8c;
+      border-bottom: 1px solid #8c8c8c; */
       border-radius: 5px;
     }
 
@@ -70,33 +77,48 @@
       color: rgb(255, 128, 0);
       font-size: 50px;
       font-family: Arial, Helvetica, sans-serif;
-      font-family: "Lucida Console", Courier, monospace;
+      font-family: "Lucida console", Courier, monospace;
       font-weight: bold;
     }
 
+    .moveBox{
+      background-color: rgb(0, 119, 179);
+    }
     .moves{
       text-align: center;
-      font-family: "Lucida Console", Courier, monospace;
+      font-family: "Lucida console", Courier, monospace;
       font-size: 20px;
       font-weight: bold;
       margin:5px;
+      color: #d9d9d9;
     }
     #moveCount{
       text-align: center;
-      font-family: "Lucida Console", Courier, monospace;
+      color: white;
+      font-family: "Lucida console", Courier, monospace;
       font-size: 20px;
       font-weight: bold;
       margin:5px;
     }
 
+    /* #timerFrame{
+      display: block;
+      float: left;
+      width: 220px;
+    }
+
+    #timerBox{
+      width: 200px;
+
+    } */
 
   </style>
 
 </head>
 <body>
 
-    <div id="configOption">
-      <div class="configBox"><label class="moves">Moves:</label><div class="moveCount" id="moveCount"></div></div>
+    <div  id="configOption" class="sidePane">
+      <div class="configBox moveBox"><h3 class="moves">MOVES</h3><div class="moveCount" id="moveCount"></div></div>
       <div onclick="configure(3)" class="configBox"><div class="order">3x3</div></div>
       <div onclick="configure(4)" class="configBox"><div class="order">4x4</div></div>
       <div onclick="configure(5)" class="configBox"><div class="order">5x5</div></div>
@@ -105,6 +127,9 @@
 
     <div id="outerFrame">
     </div>
+    <!-- <div id="timerFrame" class="sidePane">
+         <div id="timerBox" class="configBox order">00:00:00</div>
+    </div> -->
 
     <script>
 
@@ -127,7 +152,7 @@
       {
 
           var move=Math.floor(Math.random()*100)%4;
-          console.log("random move:",move);
+          //console.log("random move:",move);
 
           switch (move) {
             case 0:
@@ -167,18 +192,8 @@
         updateMoveCount();
       }
 
-     function wait(ms)
-     {
-       var d=new Date();
-       var d2=null;
-       do{
-         d2=new Date();
-       }while(d2-d<ms)
-     }
 
-    
-
-      function randomize()
+     function randomize()
      {
 
         var nextTimeOut=0;
@@ -197,8 +212,6 @@
         }
 
      }
-
-  
 
       function generate()
       {
@@ -221,14 +234,14 @@
           }
         }
 
-        console.log(gameBoard);
+        //console.log(gameBoard);
       }
 
       function configure(x)
       {
 
         orderOfSquare=parseInt(x);
-        console.log(orderOfSquare,orderOfSquare);
+        //console.log(orderOfSquare,orderOfSquare);
 
         vacantIndexX=orderOfSquare-1;
         vacantIndexY=orderOfSquare-1;
@@ -293,7 +306,7 @@
           default:
               //nothing
         }
-        console.log("xMovement,yMovement:",xMovement,yMovement);
+        //console.log("xMovement,yMovement:",xMovement,yMovement);
         var x=Math.ceil(blockId/orderOfSquare)-1;
         var y=(blockId-1)%orderOfSquare;
 
@@ -301,7 +314,7 @@
         gameBoardY[x][y]+=parseInt(yMovement);
 
         document.getElementById(blockId).style.transform="translate("+gameBoardX[x][y].toString()+"px,"+gameBoardY[x][y].toString()+"px)";
-        console.log("translate("+gameBoardX[x][y].toString()+","+gameBoardY[x][y].toString()+")");
+        //console.log("translate("+gameBoardX[x][y].toString()+","+gameBoardY[x][y].toString()+")");
 
         moveCount++;
       }
@@ -326,8 +339,8 @@
             if(gameBoard[i][j]==blockId)
             {
               blockX=i;blockY=j;
-              console.log("block position:",blockX,blockY);
-              console.log("vacant position:",vacantIndexX,vacantIndexY);
+              //console.log("block position:",blockX,blockY);
+              //console.log("vacant position:",vacantIndexX,vacantIndexY);
               break;
             }
           }
@@ -341,14 +354,14 @@
             //down
             changeCSSOfBlock(blockId,"down");
             swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
-            console.log("move down");
+            //console.log("move down");
           }
           else if((blockX-1)==vacantIndexX)
           {
             //move up
             changeCSSOfBlock(blockId,"up");
             swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
-            console.log("move up");
+            //console.log("move up");
           }
         }
 
@@ -360,14 +373,14 @@
             //move right
             changeCSSOfBlock(blockId,"right");
             swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
-            console.log("move right");
+            //console.log("move right");
           }
           else if((blockY-1)==vacantIndexY)
           {
             //move left
             changeCSSOfBlock(blockId,"left");
             swap(blockId,blockX,blockY,vacantIndexX,vacantIndexY);
-            console.log("move left");
+            //console.log("move left");
           }
         }
 
@@ -380,13 +393,13 @@
 
       function makeMove(bId)
       {
-        console.log("makeMove() invoked.");
+        //console.log("makeMove() invoked.");
         var blockId=parseInt(bId);
-        console.log(blockId);
+        //console.log(blockId);
         moveBlocks(blockId);
 
-        console.log("new status of vacant:",vacantIndexX,vacantIndexY);
-        console.log(gameBoard);
+        //console.log("new status of vacant:",vacantIndexX,vacantIndexY);
+        //console.log(gameBoard);
 
         updateMoveCount();
       }
