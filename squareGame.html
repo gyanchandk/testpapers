@@ -83,6 +83,7 @@
 
     .moveBox{
       background-color: rgb(0, 119, 179);
+      width: 200px;
     }
     .moves{
       text-align: center;
@@ -101,7 +102,7 @@
       margin:5px;
     }
 
-    /* #timerFrame{
+    #timerFrame{
       display: block;
       float: left;
       width: 220px;
@@ -110,7 +111,7 @@
     #timerBox{
       width: 200px;
 
-    } */
+    }
 
   </style>
 
@@ -118,7 +119,7 @@
 <body>
 
     <div  id="configOption" class="sidePane">
-      <div class="configBox moveBox"><h3 class="moves">MOVES</h3><div class="moveCount" id="moveCount"></div></div>
+
       <div onclick="configure(3)" class="configBox"><div class="order">3x3</div></div>
       <div onclick="configure(4)" class="configBox"><div class="order">4x4</div></div>
       <div onclick="configure(5)" class="configBox"><div class="order">5x5</div></div>
@@ -127,9 +128,10 @@
 
     <div id="outerFrame">
     </div>
-    <!-- <div id="timerFrame" class="sidePane">
+    <div id="timerFrame" class="sidePane">
          <div id="timerBox" class="configBox order">00:00:00</div>
-    </div> -->
+         <div class="configBox moveBox"><h3 class="moves">MOVES</h3><div class="moveCount" id="moveCount"></div></div>
+    </div>
 
     <script>
 
