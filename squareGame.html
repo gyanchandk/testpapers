@@ -176,10 +176,11 @@
       <div id="gameStart" class="configBox order" onclick="gameStart()" >START</div>
       <div id="timerBox" class="configBox order" >00:00:00</div>
       <div id="moveBox" class="configBox "><h3 class="moves">MOVES</h3><div class="moveCount" id="moveCount"></div></div>
-      <div onclick="configure(3)" class="configBox"><div class="order">3x3</div></div>
-      <div onclick="configure(4)" class="configBox"><div class="order">4x4</div></div>
-      <div onclick="configure(5)" class="configBox"><div class="order">5x5</div></div>
-      <div onclick="configure(6)" class="configBox"><div class="order">6x6</div></div>
+      <div onclick="init(2)" class="configBox"><div class="order">2x2</div></div>
+      <div onclick="init(3)" class="configBox"><div class="order">3x3</div></div>
+      <div onclick="init(4)" class="configBox"><div class="order">4x4</div></div>
+      <div onclick="init(5)" class="configBox"><div class="order">5x5</div></div>
+
     </div>
 
 
@@ -200,6 +201,7 @@
       var gameBoardWidth,gameBoardHeight;
       var gameTime="00:00:00";
       var timerArray=new Array(7200);
+      var innerBlockWidth=0;
 
       var shuffle=false;
 
@@ -255,13 +257,32 @@
      {
        document.getElementById("outerFrame").style.opacity=0.5;
        document.getElementById("outerFrame").style.pointerEvents="none";
+
+       document.getElementById("gameStart").innerHTML="Start";
+       document.getElementById("gameStart").style.pointerEvents="initial";
+
+       moveCount=0;
+       updateMoveCount();
        shuffle=true;
+
+
      }
      function randomize()
      {
-
         var nextTimeOut=0;
         var x=Math.PI/400;
+
+        if(orderOfSquare==2)
+        {
+          
+          setTimeout(function(){ makeMove(3);},100);
+          setTimeout(function(){ makeMove(1);},200);
+          setTimeout(function(){ makeMove(2);},300);
+          setTimeout(function(){ fadeOutFrame();},350);
+          return;
+        }
+
+
         for(var i=0;i<200;i++)
         {
           nextTimeOut+=Math.sin(x*i)*10;
@@ -334,10 +355,11 @@
 
       function playAgain()
       {
-        init();
+        init(orderOfSquare);
       }
       function gameEnd()
       {
+
           for(var i=0;i<7200;i++)
           {
             clearTimeout(timerArray[i]);
@@ -348,10 +370,18 @@
           eString+="<div id='playAgain'><input class='playBtn' type='button' onclick='playAgain()' value='Play Again'></div>";
 
           document.getElementById("outerFrame").innerHTML=eString;
+          document.getElementById("gameStart").innerHTML="Game end!";
+          shuffle=false;
+
+
       }
       function gameStart()
       {
+
         startTime=new Date();
+        document.getElementById("gameStart").style.pointerEvents="none";
+        document.getElementById("gameStart").innerHTML="Started...";
+
         document.getElementById("timerBox").style.opacity=1;
         document.getElementById("moveBox").style.opacity=1;
         document.getElementById("outerFrame").style.opacity=1;
@@ -368,10 +398,6 @@
 
       function configure(x)
       {
-
-        orderOfSquare=parseInt(x);
-        //console.log(orderOfSquare,orderOfSquare);
-
         vacantIndexX=orderOfSquare-1;
         vacantIndexY=orderOfSquare-1;
 
@@ -383,50 +409,51 @@
 
 
 
-        var width=90*orderOfSquare+10*(orderOfSquare+1);
-        var height=90*orderOfSquare+10*(orderOfSquare+1);
+        // var width=90*orderOfSquare+10*(orderOfSquare+1);
+        // var height=90*orderOfSquare+10*(orderOfSquare+1);
+        var width=height=90*5+10*(5+1);
         document.getElementById("outerFrame").style.width=width+"px";
         document.getElementById("outerFrame").style.height=height+"px";
 
         gameBoardWidth=gameBoardHeight=width;
 
+        innerBlockWidth=Math.floor((width-10*(orderOfSquare+1))/orderOfSquare);
 
         var blockString="";
         for(var i=1;i<vacantNumber;i++)
         {
-          blockString+=`<div class="innerBlock" id=`+i+` onclick="makeMove(this.id)"><div class="number">`+i+`</div></div>`;
+          blockString+=`<div class="innerBlock" id=`+i+` style="width:`+innerBlockWidth+`px;height:`+innerBlockWidth+`px;" onclick="makeMove(this.id)"><div class="number">`+i+`</div></div>`;
+
         }
         document.getElementById("outerFrame").innerHTML=blockString;
-        document.getElementById("outerFrame").innerHTML=blockString;
 
+      }
+
+      function playAgain()
+      {
+        init(orderOfSquare);
+      }
+
+      function init(x)
+      {
+        orderOfSquare=parseInt(x);
+        document.getElementById("gameStart").innerHTML="Loading...";
+        document.getElementById("gameStart").style.pointerEvents="none";
+        document.getElementById("timerBox").innerHTML="00:00:00";
+
+
+        shuffle=false;
+        configure(orderOfSquare);
         generate();
         document.getElementById("timerBox").style.opacity=0.5;
         document.getElementById("moveBox").style.opacity=0.5;
         document.getElementById("outerFrame").style.opacity=1;
         document.getElementById("outerFrame").style.pointerEvents="initial";
 
-        rCount=0;
         randomize();
-        moveCount=0;
-        updateMoveCount();
-
-
 
       }
-
-      function init()
-      {
-        orderOfSquare=3;
-        moveCount=0;
-
-
-        document.getElementById("timerBox").innerHTML="00:00:00";
-        updateMoveCount();
-        shuffle=false;
-        configure(orderOfSquare);
-
-      }
-      init();
+      init(2);
 
       function changeCSSOfBlock(blockId,direction)
       {
@@ -451,6 +478,11 @@
         //console.log("xMovement,yMovement:",xMovement,yMovement);
         var x=Math.ceil(blockId/orderOfSquare)-1;
         var y=(blockId-1)%orderOfSquare;
+
+        if(xMovement=="-100"){xMovement=-(innerBlockWidth+10);}
+        if(xMovement=="100"){xMovement=(innerBlockWidth+10);}
+        if(yMovement=="-100"){yMovement=-(innerBlockWidth+10);}
+        if(yMovement=="100"){yMovement=(innerBlockWidth+10);}
 
         gameBoardX[x][y]+=parseInt(xMovement);
         gameBoardY[x][y]+=parseInt(yMovement);
@@ -565,7 +597,8 @@
         updateMoveCount();
         if(shuffle==true )
         {
-            checkForOver();
+            setTimeout(function(){ checkForOver();},200);
+
         }
 
 
