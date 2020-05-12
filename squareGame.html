@@ -274,7 +274,7 @@
 
         if(orderOfSquare==2)
         {
-          
+
           setTimeout(function(){ makeMove(3);},100);
           setTimeout(function(){ makeMove(1);},200);
           setTimeout(function(){ makeMove(2);},300);
@@ -436,10 +436,21 @@
 
       function init(x)
       {
+
         orderOfSquare=parseInt(x);
+
+        for(var i=0;i<7200;i++)
+        {
+          clearTimeout(timerArray[i]);
+        }
+        moveCount=0;
+        updateMoveCount();
+
         document.getElementById("gameStart").innerHTML="Loading...";
         document.getElementById("gameStart").style.pointerEvents="none";
         document.getElementById("timerBox").innerHTML="00:00:00";
+
+
 
 
         shuffle=false;
@@ -450,7 +461,8 @@
         document.getElementById("outerFrame").style.opacity=1;
         document.getElementById("outerFrame").style.pointerEvents="initial";
 
-        randomize();
+        setTimeout(function(){ randomize();},2000);
+        //randomize();
 
       }
       init(2);
